@@ -54,16 +54,19 @@ class HammerTime {
   }
 
   rotate() {
+    this.now = this.now || Date.now();
     this.rotating = true;
-    this.mesh.rotation.z -= .8;
-    this.mesh.position.z -= 300;
-    if(this.mesh.rotation.z < -1.8) {
+    this.mesh.rotation.z -= (Date.now() - this.now) * .004;
+    this.mesh.position.z -= (Date.now() - this.now) * 1.5;
+    this.now = Date.now();
+    if(this.mesh.rotation.z < -1.2) {
       console.log(this.mesh.rotation.z);
       this.mesh.rotation.z = this.initialRz;
       this.mesh.position.z = this.initialZ;
       this.rotating = false;
+      this.now = false;
     } else {
-      setTimeout(this.rotate.bind(this), 100);
+      requestAnimationFrame(this.rotate.bind(this));
     }
   }
 

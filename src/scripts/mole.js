@@ -35,21 +35,27 @@ class Mole {
   }
   upAndDown() {
     if(this.up){
-      this.mesh.position.z += (Date.now() - this.now) * 1.2;
+      this.mesh.position.z += (Date.now() - this.now) * 2.4;
       if(this.mesh.position.z >= -250){
         this.mesh.position.z = -250;
         this.up = false;
+        this.pause = true;
+        this.pauseStart = this.now;
+      }
+    } else if (this.pause){
+      if(this.now - this.pauseStart >= 250){
+        this.pause = false;
         this.down = true;
       }
-    } else if (this.down){
-      this.mesh.position.z -= (Date.now() - this.now) * 1.2;
+    } else if (this.down) {
+      this.mesh.position.z -= (Date.now() - this.now) * 2.4;
       if(this.mesh.position.z <= -750){
         this.mesh.position.z = -750;
         this.down = false;
       }
     }
     this.now = Date.now();
-    if(this.up || this.down){
+    if(this.up || this.pause || this.down){
       requestAnimationFrame(this.upAndDown.bind(this));
     }
   }
