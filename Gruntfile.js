@@ -4,10 +4,11 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-haml');
 
-  grunt.registerTask('dev', ['browserify', 'eslint', 'haml', 'watch']);
-  grunt.registerTask('build', ['browserify', 'eslint', 'haml']);
+  grunt.registerTask('dev', ['browserify', 'eslint', 'haml', 'sass', 'watch']);
+  grunt.registerTask('build', ['browserify', 'eslint', 'haml', 'sass']);
 
   grunt.initConfig({
     /**
@@ -43,14 +44,22 @@ module.exports = function (grunt) {
       }
     },
 
+    sass: {
+      dist: {
+        files: {
+          'dist/index.css' : 'src/styles/index.scss'
+        }
+      }
+    },
+
     /**
      * Run predefined tasks whenever watched files are added,
      * modified or deleted.
      */
     watch: {
       scripts: {
-        files: ['src/scripts/**/*.js', 'src/index.haml'],
-        tasks: ['browserify', 'eslint', 'haml'],
+        files: ['src/scripts/**/*.js', 'src/index.haml', 'src/styles/**/*.scss'],
+        tasks: ['browserify', 'eslint', 'haml', 'sass'],
         options: {
           livereload: 1337
         }
