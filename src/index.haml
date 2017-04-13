@@ -9,4 +9,12 @@
         Start Game
       %button#hammerColor
         Hammer Color
+    #highScoreForm
+      %h1 New High Score!
+      .form
+        %label
+          Enter Your Initials:
+        %input{type: 'text', maxlength: '3', pattern: "[A-Za-z]"}
+        %button
+          Submit
     %script{type: "text/javascript", src: "./app.js"}

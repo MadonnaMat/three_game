@@ -1,8 +1,10 @@
+'use strict';
 import $ from 'jquery';
 import HammerTime from './hammerTime.js';
 import Platform from './platform.js';
 import Mole from './mole.js';
 import Score from './score.js';
+import HighScore from './highscore.js'
 import Timer from './timer.js';
 import {Scene, DirectionalLight, Color, PerspectiveCamera, BoxGeometry, WebGLRenderer} from 'three';
 
@@ -11,6 +13,8 @@ let hammerTime = new HammerTime(scene);
 let mole = new Mole(scene);
 let platform = new Platform( scene );
 let score = new Score( scene );
+let highscore = new HighScore( scene );
+
 
 let camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
 camera.position.z = 1000;
@@ -31,11 +35,13 @@ document.body.appendChild( renderer.domElement );
 let $domElement = $(renderer.domElement)
 let $startGame = $('#startGame');
 let $hammerColor = $('#hammerColor');
-let timer = new Timer( scene, $domElement, $startGame );
+let timer = new Timer( scene, $domElement, $startGame, score, highscore );
+highscore.timer = timer;
 
 $startGame.on('click', () => {
   $startGame.parent().hide();
   $domElement.css({cursor: 'none'});
+  highscore.hideHighScores();
   if(score.score != 0) {
     score.score = 0;
     score.reloadScoreboard();

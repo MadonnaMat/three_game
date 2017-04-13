@@ -2,8 +2,9 @@
 import {Mesh, MeshLambertMaterial, FontLoader, TextGeometry, Box3} from 'three';
 
 class Timer {
-  constructor(scene, $domElement, $startGame){
+  constructor(scene, $domElement, $startGame, score, highscore){
     let loader = new FontLoader();
+    this.firstGame = true;
     this.mesh = {
       position: {},
       rotation: {}
@@ -11,6 +12,8 @@ class Timer {
     this.$domElement = $domElement;
     this.$startGame = $startGame;
     this.timeLeft = 0;
+    this.score = score;
+    this.highscore = highscore;
     loader.load('https://api.myjson.com/bins/10cfyj', (font) => {
         this.font = font;
         let geometry = new TextGeometry(this.timeLeft, {font: this.font});
@@ -28,6 +31,11 @@ class Timer {
   redrawTime(){
     this.mesh.geometry = new TextGeometry(this.timeLeft, {font: this.font});
   }
+  showMenu(){
+    this.$domElement.css({cursor: 'default'});
+    this.$startGame.parent().show();
+    this.highscore.showHighScores();
+  }
   tickDown(){
     this.now = this.now || Date.now();
     if(Date.now() - this.now >= 1000){
@@ -38,9 +46,18 @@ class Timer {
     if(this.timeLeft > 0){
       requestAnimationFrame(this.tickDown.bind(this));
     } else {
-      this.$domElement.css({cursor: 'default'});
-      this.$startGame.parent().show();
-      this.now = null;
+      if(!this.firstGame){
+        this.$domElement.css({cursor: 'default'});
+        let newHighScore = this.highscore.checkHighScore(this.score);
+        if(newHighScore){
+          this.highscore.showNewHighScore(newHighScore);
+        } else {
+          this.$startGame.parent().show();
+        }
+        this.highscore.showHighScores();
+        this.now = null;
+      }
+      this.firstGame = false;
     }
   }
 }
