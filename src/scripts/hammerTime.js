@@ -18,11 +18,7 @@ class HammerTime {
     loader.load('https://api.myjson.com/bins/13es6j', (object) => {
       this.mesh = object
       scene.add( this.mesh );
-      this.mesh.traverse((child) =>{
-        if (child instanceof Mesh){
-          child.material = new MeshLambertMaterial( { color:  Math.random() * 0xffffff } );
-        }
-      });
+      this.changeColor();
       this.mesh.position.y = this.initialY;
       this.mesh.position.z = this.initialZ;
       this.mesh.scale.x = 100;
@@ -31,7 +27,13 @@ class HammerTime {
       this.mesh.rotation.x = 1;
       this.mesh.rotation.y = 1.6;
       this.mesh.rotation.z = this.initialRz;
-      window.mesh = this.mesh;
+    });
+  }
+  changeColor(){
+    this.mesh.traverse((child) =>{
+      if (child instanceof Mesh){
+        child.material = new MeshLambertMaterial( { color:  Math.random() * 0xffffff } );
+      }
     });
   }
   move(event, $domElement) {

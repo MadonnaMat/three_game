@@ -23,7 +23,6 @@ class Timer {
         this.mesh.position.x = -3500;
         scene.add( this.mesh );
         this.tickDown();
-        window.timer = this.mesh;
     });
   }
   redrawTime(){
@@ -40,7 +39,7 @@ class Timer {
       requestAnimationFrame(this.tickDown.bind(this));
     } else {
       this.$domElement.css({cursor: 'default'});
-      this.$startGame.show();
+      this.$startGame.parent().show();
       this.now = null;
     }
   }

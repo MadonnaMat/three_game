@@ -15,7 +15,6 @@ class Mole {
     this.mesh.scale.y = 5;
     this.mesh.scale.z = 5;
     scene.add( this.mesh );
-    window.mole = this.mesh;
   }
 
   move() {

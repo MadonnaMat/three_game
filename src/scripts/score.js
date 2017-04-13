@@ -21,7 +21,6 @@ class Score {
         scene.add( this.mesh );
         let box = new Box3().setFromObject(this.mesh);
         this.mesh.position.x = (box.min.x - box.max.x)/2;
-        window.score = this.mesh;
     })
   }
   reloadScoreboard(){

@@ -1,12 +1,10 @@
-import jQuery from 'jquery';
+import $ from 'jquery';
 import HammerTime from './hammerTime.js';
 import Platform from './platform.js';
 import Mole from './mole.js';
 import Score from './score.js';
 import Timer from './timer.js';
-import {Scene, DirectionalLight, PerspectiveCamera, BoxGeometry, WebGLRenderer} from 'three';
-
-window.$ = window.jQuery = jQuery;
+import {Scene, DirectionalLight, Color, PerspectiveCamera, BoxGeometry, WebGLRenderer} from 'three';
 
 let scene = new Scene();
 let hammerTime = new HammerTime(scene);
@@ -17,12 +15,13 @@ let score = new Score( scene );
 let camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
 camera.position.z = 1000;
 camera.rotation.x = .8;
+
 let light = new DirectionalLight( 0xffffff );
 light.position.set( camera.position.x, camera.position.y, camera.position.z ).normalize();
 scene.add( light );
 
 
-window.camera = camera;
+scene.background = new Color( 'lightblue' );
 
 let renderer = new  WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -31,10 +30,11 @@ document.body.appendChild( renderer.domElement );
 
 let $domElement = $(renderer.domElement)
 let $startGame = $('#startGame');
+let $hammerColor = $('#hammerColor');
 let timer = new Timer( scene, $domElement, $startGame );
 
 $startGame.on('click', () => {
-  $startGame.hide();
+  $startGame.parent().hide();
   $domElement.css({cursor: 'none'});
   if(score.score != 0) {
     score.score = 0;
@@ -43,6 +43,10 @@ $startGame.on('click', () => {
   timer.timeLeft = 60;
   timer.tickDown();
 });
+
+$hammerColor.on('click', () => {
+  hammerTime.changeColor();
+})
 
 $domElement.on('mousemove', (event) => {
   if(timer.timeLeft > 0) { 

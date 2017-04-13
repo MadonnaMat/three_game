@@ -11,10 +11,6 @@ class Platform {
 
 
     this.platform.position.z = -500;
-
-    window.platform = this.platform;
-
-    window.BoxGeometry = BoxGeometry;
   }
 }
 
