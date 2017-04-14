@@ -2,7 +2,7 @@
 import {MeshLambertMaterial, Mesh, ObjectLoader} from 'three';
 
 class HammerTime {
-  constructor(scene) {
+  constructor(scene, mole, score) {
     this.mesh = {
       position: {},
       rotation: {}
@@ -11,6 +11,8 @@ class HammerTime {
     this.initialZ = 400;
     this.initialRz = 0.4;
     this.rotating = false;
+    this.mole = mole;
+    this.score = score;
 
     let loader = new ObjectLoader();
 
@@ -47,9 +49,7 @@ class HammerTime {
   }
 
   checkHit(mole){
-    console.log("ME: ", this.mesh.position.x, this.mesh.position.y)
-    console.log("Mole: ", mole.mesh.position.x, mole.mesh.position.y);
-    return (!mole.hit && mole.mesh.position.x - 350 < this.mesh.position.x &&
+    return (mole.hittable() && mole.mesh.position.x - 350 < this.mesh.position.x &&
             mole.mesh.position.x + 250 > this.mesh.position.x &&
             mole.mesh.position.y - 300 < this.mesh.position.y &&
             mole.mesh.position.y + 300 > this.mesh.position.y)
@@ -58,17 +58,34 @@ class HammerTime {
   rotate() {
     this.now = this.now || Date.now();
     this.rotating = true;
-    this.mesh.rotation.z -= (Date.now() - this.now) * .004;
-    this.mesh.position.z -= (Date.now() - this.now) * 1.5;
-    this.now = Date.now();
-    if(this.mesh.rotation.z < -1.2) {
-      console.log(this.mesh.rotation.z);
+    if(this.back){
+      this.mesh.rotation.z += (Date.now() - this.now) * .004;
+      this.mesh.position.z += (Date.now() - this.now) * 1.5;
+      this.now = Date.now();
+      if(this.mesh.rotation.z > .8) {
+        this.forward = true;
+        this.back = false;
+      }
+    }
+    if(this.forward) {
+      this.mesh.rotation.z -= (Date.now() - this.now) * .008;
+      this.mesh.position.z -= (Date.now() - this.now) * 3;
+      this.now = Date.now();
+      if(this.checkHit(this.mole)) {
+        this.mole.setHit();
+        this.score.incrementScore();
+      }
+      if(this.mesh.rotation.z < -1.2) {
+        this.forward = false;
+      }
+    }
+    if(this.forward || this.back){
+      requestAnimationFrame(this.rotate.bind(this));
+    } else {
       this.mesh.rotation.z = this.initialRz;
       this.mesh.position.z = this.initialZ;
       this.rotating = false;
       this.now = false;
-    } else {
-      requestAnimationFrame(this.rotate.bind(this));
     }
   }
 

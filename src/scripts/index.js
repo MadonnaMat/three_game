@@ -9,11 +9,11 @@ import Timer from './timer.js';
 import {Scene, DirectionalLight, Color, PerspectiveCamera, BoxGeometry, WebGLRenderer} from 'three';
 
 let scene = new Scene();
-let hammerTime = new HammerTime(scene);
 let mole = new Mole(scene);
 let platform = new Platform( scene );
 let score = new Score( scene );
 let highscore = new HighScore( scene );
+let hammerTime = new HammerTime(scene, mole, score);
 
 
 let camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
@@ -62,10 +62,7 @@ $domElement.on('mousemove', (event) => {
 
 $domElement.on('click', (event) =>{
   if(!hammerTime.rotating && timer.timeLeft > 0){
-    if(hammerTime.checkHit(mole)) {
-      mole.setHit();
-      score.incrementScore();
-    }
+    hammerTime.back = true;
     hammerTime.rotate();
   };
 });

@@ -1,5 +1,5 @@
 'use strict';
-import {Mesh, MeshLambertMaterial, CylinderBufferGeometry} from 'three';
+import {Mesh, MeshLambertMaterial, CylinderBufferGeometry, SphereGeometry} from 'three';
 
 class Mole {
   constructor(scene) {
@@ -7,6 +7,10 @@ class Mole {
     let  material = new MeshLambertMaterial( { color : 'brown' } );
     let  geometry = new CylinderBufferGeometry( 50, 50, 100, 30, 1 );
     this.mesh = new Mesh( geometry, material );
+    let headGeometry = new SphereGeometry(50);
+    let headMesh = new Mesh(headGeometry, material);
+    headMesh.position.y = 50;
+    this.mesh.add(headMesh);
     this.originalR = this.mesh.material.color.r;
     this.mesh.rotation.x = 1.4;
     this.mesh.position.y = 1000;
@@ -48,8 +52,8 @@ class Mole {
       }
     } else if (this.down) {
       this.mesh.position.z -= (Date.now() - this.now) * 2.4;
-      if(this.mesh.position.z <= -750){
-        this.mesh.position.z = -750;
+      if(this.mesh.position.z <= -900){
+        this.mesh.position.z = -900;
         this.down = false;
       }
     }
@@ -64,6 +68,10 @@ class Mole {
       this.hit = true;
       this.mesh.material.color.r = 1;
     }
+  }
+
+  hittable(){
+    return !this.hit && this.mesh.position.z > -650;
   }
   
   rand(min, max) {

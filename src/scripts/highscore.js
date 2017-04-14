@@ -84,13 +84,10 @@ class HighScore {
     let scores = this.highscores.map((highscore) => highscore.score);
     let lowestScore = scores[scores.length -1];
     if(score.score > lowestScore){
-      let i = scores.length -1;
-      for(; i > 0; i--){
-        if(score.score < scores[i])
-          break;
-      }
+      scores.push(score.score);
+      scores = scores.sort((a, b) => (b- a))
+      let i = scores.lastIndexOf(score.score);
       return [i, score.score];
-      this.newHighScore(i, score.score);
     }
     return false;
   }
